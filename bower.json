@@ -1,0 +1,22 @@
+{
+  "name": "alarm-clock",
+  "version": "0.0.0",
+  "dependencies": {
+    "angular": "^1.4.0",
+    "angular-ui-router": "^0.3.2",
+    "angular-bootstrap": "^2.4.0",
+    "AngularJS-Toaster": "angularjs-toaster#^2.1.0",
+    "angular-cookie": "^4.1.0"
+  },
+  "appPath": "app",
+  "moduleName": "alarm",
+  "overrides": {
+    "bootstrap": {
+      "main": [
+        "less/bootstrap.less",
+        "dist/css/bootstrap.css",
+        "dist/js/bootstrap.js"
+      ]
+    }
+  }
+}
