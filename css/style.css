@@ -93,3 +93,14 @@ body{
     text-align: center;
     z-index: 1000;
 }
+audio{
+    display: none !important;
+}
+.alarmImg{
+    width: 100px; height: 100px;
+}
+.overlay{
+    margin-top: 19%;
+    float: left;
+    width: 100%;
+}

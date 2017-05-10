@@ -1,10 +1,13 @@
 app
     .controller('homePageCtrl', function ($scope, $interval, $uibModal, $filter, toaster) {
 
+        var selectedWeekDays = [];
+        var alarmDataObj = {};
         $scope.time = "";
         $scope.ismeridian = true;
         $scope.alarmTime = new Date();
-        //var currentDateTime = new Date();
+        $scope.isShown = false;
+        $scope.allAlarms = [];
         $scope.weekdays = {
             isMon: 'Monday',
             isTue: 'Tuesday',
@@ -14,10 +17,9 @@ app
             isSat: 'Saturday',
             isSun: 'Sunday'
         };
-
-        var selectedWeekDays = [];
-        var alarmDataObj = {};
-
+        if (JSON.parse(window.localStorage.getItem('alarmList'))) {
+            $scope.allAlarms = JSON.parse(window.localStorage.getItem('alarmList'));
+        }
 
         $scope.clockTime = clockTime;
         $scope.onSetRecurring = onSetRecurring;
@@ -25,11 +27,8 @@ app
         $scope.openModal = openModal;
         $scope.closeModal = closeModal;
         $scope.saveAlarm = saveAlarm;
-
-
-        if (JSON.parse(window.localStorage.getItem('alarmList'))) {
-            $scope.allAlarms = JSON.parse(window.localStorage.getItem('alarmList'));
-        }
+        $scope.closeAlarm = closeAlarm;
+        $scope.deleteAlarm = deleteAlarm;
 
         /*
          * Method for get current date and time
@@ -37,8 +36,11 @@ app
         function clockTime() {
             $scope.time = Date.now();
             if (JSON.parse(window.localStorage.getItem('alarmList'))) {
-                $scope.allAlarms.forEach(function (alarm) {
+                $scope.allAlarms.forEach(function (alarm, index) {
                     if (alarm.recurringDays.length > 0) {
+                        $scope.$watch('$scope.time.getDay()', function() {
+                            alarm.isShown = false;
+                        });
                         alarm.recurringDays.forEach(function (day) {
                             switch (day) {
                                 case 'Sunday':
@@ -62,13 +64,16 @@ app
                                 case 'Saturday':
                                     day = "7";
                             }
+
                             if ($filter('date')(alarm.time, 'HH:mm') == $filter('date')(Date.now($scope.time), 'HH:mm') && day === new Date().getDay()) {
                                 $scope.showAlarm = true;
+                                alarm.isShown = true;
                             }
                         });
                     } else {
-                        if ($filter('date')(alarm.time, 'HH:mm') == $filter('date')(Date.now($scope.time), 'HH:mm') && $filter('date')(alarm.time, 'dd-MM-yy') == $filter('date')(new Date, 'dd-MM-yy')) {
+                        if ($filter('date')(alarm.time, 'HH:mm') == $filter('date')(Date.now($scope.time), 'HH:mm') && $filter('date')(alarm.time, 'dd-MM-yy') == $filter('date')(new Date, 'dd-MM-yy')&& !alarm.isShown) {
                             $scope.showAlarm = true;
+                            alarm.isShown = true;
                         }
                     }
 
@@ -96,8 +101,6 @@ app
                     selectedWeekDays.splice(index, 1);
                 }
             }
-            console.log(key, value);
-            console.log(selectedWeekDays);
         }
 
         /*
@@ -124,19 +127,18 @@ app
          * */
         function closeModal() {
             $scope.modalInstance.dismiss();//$scope.modalInstance.close() also works I think
-            var selectedWeekDays = []
+            var selectedWeekDays = [];
         };
 
         /*
          * Method for save alarm
          * */
         function saveAlarm() {
-
             alarmDataObj = {
                 time: $scope.alarmTime,
-                recurringDays: selectedWeekDays
-            }
-            console.log(JSON.parse(window.localStorage.getItem('alarmList')));
+                recurringDays: selectedWeekDays,
+                isShown : false
+            };
             if (!JSON.parse(window.localStorage.getItem('alarmList')) || JSON.parse(window.localStorage.getItem('alarmList') == null)) {
                 var alarmList = [];
                 alarmList.push(alarmDataObj);
@@ -145,17 +147,27 @@ app
             } else {
                 alarmList = window.localStorage.getItem('alarmList');
                 alarmList = JSON.parse(alarmList);
-                console.log(alarmList[1]);
                 alarmList.push(alarmDataObj);
-                console.log(alarmList);
                 window.localStorage.setItem("alarmList", JSON.stringify(alarmList));
             }
             $scope.allAlarms = [];
             $scope.allAlarms = JSON.parse(window.localStorage.getItem('alarmList'));
 
             showToaster('success', 'Alarm', " alarm successfully set ");
-            $scope.close();
+            closeModal();
         }
 
+        function deleteAlarm(index) {
+
+            if (index > -1) {
+                $scope.allAlarms.splice(index, 1);
+            }
+            window.localStorage.setItem("alarmList", JSON.stringify($scope.allAlarms));
+            showToaster('success', 'Alarm', " alarm deleted successfully ");
+        }
+
+        function closeAlarm(){
+            $scope.showAlarm = false;
+        }
 
     })
