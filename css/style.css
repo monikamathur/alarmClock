@@ -84,12 +84,16 @@ body{
     position: relative;
 }
 .container.alarmList{
-    height: 40%;
+    height: 55%;
     background-color: rgb(255, 255, 255);
     padding-top: 15px;
+    overflow-y:scroll;
+    margin-top: 11px;
+
 }
 .container.timer span{
-    font-size: 71px
+    font-size: 71px;
+    font-family:Courier New;
 }
 .container.timer button{
     position: absolute;

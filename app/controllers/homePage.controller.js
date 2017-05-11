@@ -71,6 +71,7 @@ app
                                     break;
                                 case 'Saturday':
                                     day = "7";
+                                    break;
                             }
 
                             if ($filter('date')(alarm.time, 'HH:mm') == $filter('date')(Date.now($scope.time), 'HH:mm') && day === new Date().getDay()) {
@@ -82,7 +83,7 @@ app
                         });
                     } else {
                         console.log('!alarm.isShown' ,alarm.isShown)
-                        if ($filter('date')(alarm.time, 'HH:mm') == $filter('date')(Date.now($scope.time), 'HH:mm') && $filter('date')(alarm.time, 'dd-MM-yy') == $filter('date')(new Date, 'dd-MM-yy')&& !alarm.isShown) {
+                        if ($filter('date')(alarm.time, 'HH:mm') == $filter('date')(Date.now($scope.time), 'HH:mm') && $filter('date')(alarm.time, 'dd-MM-yy') == $filter('date')(new Date(), 'dd-MM-yy')&& !alarm.isShown) {
                             console.log('$scope.showAlarm' ,$scope.showAlarm)
                             $scope.showAlarm = true;
                             alarm.isShown = true;
@@ -129,6 +130,7 @@ app
          * */
         function showToaster(type, title, message) {
             toaster.pop(type, title, message);
+
         };
 
         $interval(clockTime, 1000);
@@ -201,9 +203,14 @@ app
             $scope.allAlarms.forEach(function(alarmObj){
                 console.log(new Date(alarmObj.time).getTime() < currentDate.getTime() && alarmObj.isDue,"***********",alarmObj.isDue)
                 if(new Date(alarmObj.time).getTime() < currentDate.getTime() && alarmObj.isDue){
-                    var message = alarmObj.time + " Due";
-                    showToaster('warning', 'Due Alarm', message);
-                    //$scope.dueAlarmArray.push(alarmObj);
+                    var message = $filter('date')(alarmObj.time, 'dd-MM-yy HH:mm') + " Due";
+                    toaster.pop({
+                        type: 'info',
+                        title: 'Pending Alarm',
+                        body: message,
+                        timeout: 15000
+                    });
+
                 }
                 console.log($scope.dueAlarmArray);
             });
