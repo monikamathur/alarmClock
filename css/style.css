@@ -94,6 +94,9 @@ body{
 .container.timer span{
     font-size: 71px;
     font-family:Courier New;
+    float: left;
+    width: 100%;
+    margin-top: 8%;
 }
 .container.timer button{
     position: absolute;

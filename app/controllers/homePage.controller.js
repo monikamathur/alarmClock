@@ -50,29 +50,6 @@ app
                             alarm.isShown = false;
                         });
                         alarm.recurringDays.forEach(function (day) {
-                            switch (day) {
-                                case 'Sunday':
-                                    day = '1';
-                                    break;
-                                case 'Monday':
-                                    day = "2";
-                                    break;
-                                case 'Tuesday':
-                                    day = "3";
-                                    break;
-                                case 'Wednesday':
-                                    day = "4";
-                                    break;
-                                case 'Thursday':
-                                    day = "5";
-                                    break;
-                                case 'Friday':
-                                    day = "6";
-                                    break;
-                                case 'Saturday':
-                                    day = "7";
-                                    break;
-                            }
 
                             if ($filter('date')(alarm.time, 'HH:mm') == $filter('date')(Date.now($scope.time), 'HH:mm') && day === new Date().getDay()) {
                                 $scope.showAlarm = true;
@@ -157,12 +134,41 @@ app
          * Method for save alarm
          * */
         function saveAlarm() {
+            var dayArray = [];
+            selectedWeekDays.forEach(function(day){
+                switch (day) {
+                    case 'Sunday':
+                        dayArray.push(1);
+                        break;
+                    case 'Monday':
+                        dayArray.push(2);
+                        break;
+                    case 'Tuesday':
+                        dayArray.push(3);
+                        break;
+                    case 'Wednesday':
+                        dayArray.push(4);
+                        break;
+                    case 'Thursday':
+                        dayArray.push(5);
+                        break;
+                    case 'Friday':
+                        dayArray.push(6);
+                        break;
+                    case 'Saturday':
+                        dayArray.push(7);
+                        break;
+                }
+            })
+
+
             alarmDataObj = {
                 time: $scope.alarmTime,
-                recurringDays: selectedWeekDays,
+                recurringDays: dayArray,
                 isShown : false,
                 isDue : true
             };
+
             if (!JSON.parse(window.localStorage.getItem('alarmList')) || JSON.parse(window.localStorage.getItem('alarmList') == null)) {
                 var alarmList = [];
                 alarmList.push(alarmDataObj);
@@ -216,6 +222,12 @@ app
             });
 
         }
+
+
+
+        //myDays.sort(daysOfWeekSorter);
+
+
 
 
     })

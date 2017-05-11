@@ -34,12 +34,11 @@
                 </thead>
                 <tbody>
 
-                <tr ng-repeat="alarm in allAlarms track by $index">
+                <tr ng-repeat="alarm in allAlarms track by $index" ng-class="alarm.isShown? 'success':''">
                     <td>{{alarm.time | date:'HH:mm'}} </td>
                     <td>
                         <ul class="list-inline">
-                            <li ng-repeat="day in alarm.recurringDays" data-placement="top" data-toggle="tooltip" title="day" class="btn btn-primary btn-xs" data-title="Edit" >{{day.slice(0,3)}}</li>
-
+                            <li ng-repeat="day in alarm.recurringDays.sort()" data-placement="top" data-toggle="tooltip" title="day" class="btn btn-primary btn-xs" data-title="Edit" >{{day==1?'Mon':''}}{{day==2?'Tue':''}}{{day==3?'Wed':''}}{{day==4?'Thu':''}}{{day==5?'Fri':''}}{{day==6?'Sat':''}}{{day==7?'Sun':''}}</li>
                         </ul>
                     </td>
                     <td><p ng-click="deleteAlarm($index)" data-placement="top" data-toggle="tooltip" title="Delete"><button class="btn btn-danger btn-xs" data-title="Delete" ><span class="glyphicon glyphicon-trash"></span></button></p></td>
