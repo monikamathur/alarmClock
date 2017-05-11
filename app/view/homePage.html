@@ -1,13 +1,14 @@
 <div class="container-fluid homeMain" >
     <div  id="alarmDiv" ng-if="showAlarm" >
         <div class="overlay">
+            <span>{{currentAlarm.time | date : 'HH : mm'}}</span>
             <img src="/images/bell.gif" class="alarmImg" />
             <audio controls autoplay>
                 <source src="/images/Alarm-tone.mp3" type="audio/ogg">
             </audio>
         </div>
         <div class="row">
-            <button type="button" class="btn btn-default" ng-click="closeAlarm()" >Close</button>
+            <button type="button" class="btn btn-default" ng-click="closeAlarm(currentAlarm)" >Close</button>
         </div>
     </div>
     <div class="row">

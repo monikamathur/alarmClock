@@ -1,5 +1,5 @@
 app
-    .controller('homePageCtrl', function ($scope, $interval, $uibModal, $filter, toaster) {
+    .controller('homePageCtrl', function ($scope, $interval, $uibModal, $filter, toaster,$timeout) {
 
         var selectedWeekDays = [];
         var alarmDataObj = {};
@@ -8,6 +8,10 @@ app
         $scope.alarmTime = new Date();
         $scope.isShown = false;
         $scope.allAlarms = [];
+        $scope.dueAlarmArray = [];
+        $scope.currentAlarm = {};
+        $scope.currentAlarmIndex = '';
+        $scope.showAlarm = false;
         $scope.weekdays = {
             isMon: 'Monday',
             isTue: 'Tuesday',
@@ -29,6 +33,10 @@ app
         $scope.saveAlarm = saveAlarm;
         $scope.closeAlarm = closeAlarm;
         $scope.deleteAlarm = deleteAlarm;
+
+        checkAllDueAlarm();
+
+
 
         /*
          * Method for get current date and time
@@ -68,16 +76,29 @@ app
                             if ($filter('date')(alarm.time, 'HH:mm') == $filter('date')(Date.now($scope.time), 'HH:mm') && day === new Date().getDay()) {
                                 $scope.showAlarm = true;
                                 alarm.isShown = true;
+                                $scope.currentAlarm = alarm;
+                                //$scope.currentAlarmIndex =
                             }
                         });
                     } else {
+                        console.log('!alarm.isShown' ,alarm.isShown)
                         if ($filter('date')(alarm.time, 'HH:mm') == $filter('date')(Date.now($scope.time), 'HH:mm') && $filter('date')(alarm.time, 'dd-MM-yy') == $filter('date')(new Date, 'dd-MM-yy')&& !alarm.isShown) {
+                            console.log('$scope.showAlarm' ,$scope.showAlarm)
                             $scope.showAlarm = true;
                             alarm.isShown = true;
+                            $scope.currentAlarm = alarm;
                         }
                     }
 
                 });
+            }
+
+            if($scope.showAlarm){
+                $timeout(function() {
+                    $scope.showAlarm = false;
+                    console.log($scope.showAlarm);
+                }, 25000);
+                console.log($scope.showAlarm);
             }
         }
 
@@ -137,7 +158,8 @@ app
             alarmDataObj = {
                 time: $scope.alarmTime,
                 recurringDays: selectedWeekDays,
-                isShown : false
+                isShown : false,
+                isDue : true
             };
             if (!JSON.parse(window.localStorage.getItem('alarmList')) || JSON.parse(window.localStorage.getItem('alarmList') == null)) {
                 var alarmList = [];
@@ -166,8 +188,27 @@ app
             showToaster('success', 'Alarm', " alarm deleted successfully ");
         }
 
-        function closeAlarm(){
+        function closeAlarm(alarmObj){
+            var index = $scope.allAlarms.indexOf(alarmObj);
+            $scope.allAlarms[index].isDue = false;
+            window.localStorage.setItem("alarmList", JSON.stringify($scope.allAlarms));
+            console.log($scope.allAlarms,"$scope.allAlarms  ");
             $scope.showAlarm = false;
         }
+
+        function checkAllDueAlarm(){
+            var currentDate = new Date();
+            $scope.allAlarms.forEach(function(alarmObj){
+                console.log(new Date(alarmObj.time).getTime() < currentDate.getTime() && alarmObj.isDue,"***********",alarmObj.isDue)
+                if(new Date(alarmObj.time).getTime() < currentDate.getTime() && alarmObj.isDue){
+                    var message = alarmObj.time + " Due";
+                    showToaster('warning', 'Due Alarm', message);
+                    //$scope.dueAlarmArray.push(alarmObj);
+                }
+                console.log($scope.dueAlarmArray);
+            });
+
+        }
+
 
     })
