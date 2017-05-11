@@ -2,6 +2,9 @@ body{
     margin: 0px;
     padding: 0;
     overflow-x: hidden;
+    background-image: url('../images/bg2.jpg');
+    background-repeat: no-repeat;
+    background-size: cover;
 }
    /*.header h1{
     color: white;
@@ -67,13 +70,31 @@ body{
 
 }*/
 
-.homeMain{
+.container-fluid.homeMain{
     width: 100%;
     height: 649px;
-    background-image: url('../images/bg2.jpg');
-    background-repeat: no-repeat;
-    background-size: cover;
     text-align: center;
+}
+.container.timer{
+    color: white;
+    height: 40%;
+    background-color: rgba(0, 0, 0, 0.34);
+    text-align: center;
+    align-content: center;
+    position: relative;
+}
+.container.alarmList{
+    height: 40%;
+    background-color: rgba(145, 35, 141, 0.74);
+}
+.container.timer span{
+    font-size: 71px
+}
+.container.timer button{
+    position: absolute;
+    left : 20px;
+    bottom : 30px;
+    overflow: hidden;
 }
 .centeredDiv { margin-right: auto; margin-left: auto; width: 800px; }
 .vertical-center {
