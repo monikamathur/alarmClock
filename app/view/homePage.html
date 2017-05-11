@@ -25,7 +25,7 @@
         <div class="table-responsive">
 
 
-            <table id="mytable" class="table table-bordred table-striped">
+            <table id="mytable" class="table table-hover text-center">
 
                 <thead>
                 <th>Alarm Time</th>
@@ -36,7 +36,12 @@
 
                 <tr ng-repeat="alarm in allAlarms track by $index">
                     <td>{{alarm.time | date:'HH:mm'}} </td>
-                    <td><p ng-repeat="day in alarm.recurringDays" data-placement="top" data-toggle="tooltip" title="day"><button class="btn btn-primary btn-xs" data-title="Edit"  ><span>{{day.slice(0,3)}}</span></button></p></td>
+                    <td>
+                        <ul class="list-inline">
+                            <li ng-repeat="day in alarm.recurringDays" data-placement="top" data-toggle="tooltip" title="day" class="btn btn-primary btn-xs" data-title="Edit" >{{day.slice(0,3)}}</li>
+
+                        </ul>
+                    </td>
                     <td><p ng-click="deleteAlarm($index)" data-placement="top" data-toggle="tooltip" title="Delete"><button class="btn btn-danger btn-xs" data-title="Delete" ><span class="glyphicon glyphicon-trash"></span></button></p></td>
                 </tr>
 
@@ -50,9 +55,6 @@
 
 <script type="text/ng-template" id="myModalContent.html">
     <form name="setAlarmForm" ng-submit="saveAlarm()">
-    <div class="modal-header">
-        <h3 class="modal-title" id="modal-title">I'm a modal!</h3>
-    </div>
     <div class="modal-body" id="modal-body">
         <div uib-timepicker ng-model="$parent.alarmTime"  hour-step="1" minute-step="1" show-meridian="true"></div>
         <div class="checkbox">

@@ -85,7 +85,8 @@ body{
 }
 .container.alarmList{
     height: 40%;
-    background-color: rgba(145, 35, 141, 0.74);
+    background-color: rgb(255, 255, 255);
+    padding-top: 15px;
 }
 .container.timer span{
     font-size: 71px
@@ -95,6 +96,12 @@ body{
     left : 20px;
     bottom : 30px;
     overflow: hidden;
+}
+#mytable th {
+    text-align: center;
+}
+.container.timer .table-responsive {
+    background-color: white;
 }
 .centeredDiv { margin-right: auto; margin-left: auto; width: 800px; }
 .vertical-center {
