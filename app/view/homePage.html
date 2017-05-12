@@ -55,15 +55,17 @@
         <div class="modal-body" id="modal-body">
             <div uib-timepicker ng-model="$parent.alarmTime" hour-step="1" minute-step="1" show-meridian="true"></div>
             <div class="checkbox">
-                <label><input type="checkbox" value="" ng-model="isRecurring" ng-change="onSetRecurring(isRecurring)">Recurring</label>
-            </div>
-            <div class="checkbox-inline col-lg-4 col-md-4" ng-repeat="(key ,value) in weekdays" ng-show="isRecurring">
-                <label class="col-sm-12 control-label">
-                    <input type="checkbox" class="custom-checkbox"
-                           name="permission"
-                           ng-click="setRecurringDay(key, value) "
-                           ng-model="key"/>{{value}}</label>
-            </div>
+                <label><input type="checkbox" value="" ng-model="isRecurring" ng-change="onSetRecurring(isRecurring)">Recurring</label></div>
+                    <div class="checkbox-inline col-lg-4 col-md-4 daysCheckBox"  ng-repeat="(key ,value) in weekdays" ng-show="isRecurring">
+                    <label class="col-sm-12 control-label">
+                        <input type="checkbox" class="custom-checkbox"
+                               name="permission"
+                               ng-click="setRecurringDay(key, value) "
+                               ng-model="key"/>
+                        {{value}}
+                    </label>
+                </div>
+
         </div>
         <div class="modal-footer">
             <button type="submit" class="btn btn-default">Set alarm</button>

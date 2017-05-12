@@ -68,3 +68,7 @@ audio{
     float: left;
     width: 100%;
 }
+.daysCheckBox{
+    float: none !important;
+    margin-left: 0px !important;
+}

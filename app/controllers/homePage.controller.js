@@ -23,6 +23,8 @@ app
             $scope.allAlarms = JSON.parse(window.localStorage.getItem('alarmList'));
         }
 
+        console.log($scope.allAlarms);
+
         $scope.clockTime = clockTime;
         $scope.closeModal = closeModal;
         $scope.closeAlarm = closeAlarm;
@@ -108,8 +110,6 @@ app
             toaster.pop(type, title, message);
 
         };
-
-
 
         /*
          * Method for open set alarm modal
