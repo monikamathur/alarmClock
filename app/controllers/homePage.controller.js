@@ -1,17 +1,16 @@
 app
-    .controller('homePageCtrl', function ($scope, $interval, $uibModal, $filter, toaster,$timeout) {
+    .controller('homePageCtrl', function ($scope, $interval, $uibModal, $filter, toaster, $timeout) {
 
         var selectedWeekDays = [];
         var alarmDataObj = {};
-        $scope.time = "";
-        $scope.ismeridian = true;
+
+
         $scope.alarmTime = new Date();
-        $scope.isShown = false;
         $scope.allAlarms = [];
-        $scope.dueAlarmArray = [];
         $scope.currentAlarm = {};
-        $scope.currentAlarmIndex = '';
+        $scope.isShown = false;
         $scope.showAlarm = false;
+        $scope.time = "";
         $scope.weekdays = {
             isMon: 'Monday',
             isTue: 'Tuesday',
@@ -26,42 +25,41 @@ app
         }
 
         $scope.clockTime = clockTime;
-        $scope.onSetRecurring = onSetRecurring;
-        $scope.setRecurringDay = setRecurringDay;
-        $scope.openModal = openModal;
         $scope.closeModal = closeModal;
-        $scope.saveAlarm = saveAlarm;
         $scope.closeAlarm = closeAlarm;
         $scope.deleteAlarm = deleteAlarm;
+        $scope.onSetRecurring = onSetRecurring;
+        $scope.openModal = openModal;
+        $scope.setRecurringDay = setRecurringDay;
+        $scope.saveAlarm = saveAlarm;
 
         checkAllDueAlarm();
-
-
 
         /*
          * Method for get current date and time
          * */
         function clockTime() {
             $scope.time = Date.now();
+            // check if alarm list is empty
             if (JSON.parse(window.localStorage.getItem('alarmList'))) {
                 $scope.allAlarms.forEach(function (alarm, index) {
+                    // check if recurring array is empty
                     if (alarm.recurringDays.length > 0) {
-                        $scope.$watch('$scope.time.getDay()', function() {
+                        $scope.$watch('$scope.time.getDay()', function () {
                             alarm.isShown = false;
                         });
                         alarm.recurringDays.forEach(function (day) {
-
+                            // check when current time is matches with alarm time if alarm object has recurring days array
                             if ($filter('date')(alarm.time, 'HH:mm') == $filter('date')(Date.now($scope.time), 'HH:mm') && day === new Date().getDay()) {
                                 $scope.showAlarm = true;
                                 alarm.isShown = true;
                                 $scope.currentAlarm = alarm;
-                                //$scope.currentAlarmIndex =
+
                             }
                         });
                     } else {
-                        console.log('!alarm.isShown' ,alarm.isShown)
-                        if ($filter('date')(alarm.time, 'HH:mm') == $filter('date')(Date.now($scope.time), 'HH:mm') && $filter('date')(alarm.time, 'dd-MM-yy') == $filter('date')(new Date(), 'dd-MM-yy')&& !alarm.isShown) {
-                            console.log('$scope.showAlarm' ,$scope.showAlarm)
+                        // check when current time is matches with alarm time and alarm object has empty recurring days array
+                        if ($filter('date')(alarm.time, 'HH:mm') == $filter('date')(Date.now($scope.time), 'HH:mm') && $filter('date')(alarm.time, 'dd-MM-yy') == $filter('date')(new Date(), 'dd-MM-yy') && !alarm.isShown) {
                             $scope.showAlarm = true;
                             alarm.isShown = true;
                             $scope.currentAlarm = alarm;
@@ -70,13 +68,11 @@ app
 
                 });
             }
-
-            if($scope.showAlarm){
-                $timeout(function() {
+            // condition for close alarm in 25 seconds
+            if ($scope.showAlarm) {
+                $timeout(function () {
                     $scope.showAlarm = false;
-                    console.log($scope.showAlarm);
                 }, 25000);
-                console.log($scope.showAlarm);
             }
         }
 
@@ -135,7 +131,7 @@ app
          * */
         function saveAlarm() {
             var dayArray = [];
-            selectedWeekDays.forEach(function(day){
+            selectedWeekDays.forEach(function (day) {
                 switch (day) {
                     case 'Sunday':
                         dayArray.push(1);
@@ -165,14 +161,13 @@ app
             alarmDataObj = {
                 time: $scope.alarmTime,
                 recurringDays: dayArray,
-                isShown : false,
-                isDue : true
+                isShown: false,
+                isDue: true
             };
 
             if (!JSON.parse(window.localStorage.getItem('alarmList')) || JSON.parse(window.localStorage.getItem('alarmList') == null)) {
                 var alarmList = [];
                 alarmList.push(alarmDataObj);
-                console.log(alarmList, 'if');
                 window.localStorage.setItem("alarmList", JSON.stringify(alarmList));
             } else {
                 alarmList = window.localStorage.getItem('alarmList');
@@ -187,6 +182,9 @@ app
             closeModal();
         }
 
+        /*
+         * Method for delete alarm
+         * ]*/
         function deleteAlarm(index) {
 
             if (index > -1) {
@@ -196,19 +194,23 @@ app
             showToaster('success', 'Alarm', " alarm deleted successfully ");
         }
 
-        function closeAlarm(alarmObj){
+        /*
+         * method for close alarm
+         * */
+        function closeAlarm(alarmObj) {
             var index = $scope.allAlarms.indexOf(alarmObj);
             $scope.allAlarms[index].isDue = false;
             window.localStorage.setItem("alarmList", JSON.stringify($scope.allAlarms));
-            console.log($scope.allAlarms,"$scope.allAlarms  ");
             $scope.showAlarm = false;
         }
 
-        function checkAllDueAlarm(){
+        /*
+         * method for check all alarm
+         * */
+        function checkAllDueAlarm() {
             var currentDate = new Date();
-            $scope.allAlarms.forEach(function(alarmObj){
-                console.log(new Date(alarmObj.time).getTime() < currentDate.getTime() && alarmObj.isDue,"***********",alarmObj.isDue)
-                if(new Date(alarmObj.time).getTime() < currentDate.getTime() && alarmObj.isDue){
+            $scope.allAlarms.forEach(function (alarmObj) {
+                if (new Date(alarmObj.time).getTime() < currentDate.getTime() && alarmObj.isDue) {
                     var message = $filter('date')(alarmObj.time, 'dd-MM-yy HH:mm') + " Due";
                     toaster.pop({
                         type: 'info',
@@ -218,16 +220,8 @@ app
                     });
 
                 }
-                console.log($scope.dueAlarmArray);
             });
-
         }
-
-
-
-        //myDays.sort(daysOfWeekSorter);
-
-
 
 
     })
