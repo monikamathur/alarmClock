@@ -1,9 +1,8 @@
 app
-    .controller('homePageCtrl', function ($scope, $interval, $uibModal, $filter, toaster, $timeout) {
+    .controller('homePageCtrl',[ '$scope', '$interval', '$uibModal', '$filter', 'toaster', '$timeout' ,  function ($scope, $interval, $uibModal, $filter, toaster, $timeout) {
 
         var selectedWeekDays = [];
         var alarmDataObj = {};
-
 
         $scope.alarmTime = new Date();
         $scope.allAlarms = [];
@@ -28,12 +27,17 @@ app
         $scope.closeModal = closeModal;
         $scope.closeAlarm = closeAlarm;
         $scope.deleteAlarm = deleteAlarm;
+        $scope.getDayName = getDayName;
+        $scope.onInIt = onInIt;
         $scope.onSetRecurring = onSetRecurring;
         $scope.openModal = openModal;
         $scope.setRecurringDay = setRecurringDay;
         $scope.saveAlarm = saveAlarm;
 
-        checkAllDueAlarm();
+        function onInIt(){
+            checkAllDueAlarm();
+            $interval(clockTime, 1000);
+        }
 
         /*
          * Method for get current date and time
@@ -54,7 +58,6 @@ app
                                 $scope.showAlarm = true;
                                 alarm.isShown = true;
                                 $scope.currentAlarm = alarm;
-
                             }
                         });
                     } else {
@@ -106,7 +109,7 @@ app
 
         };
 
-        $interval(clockTime, 1000);
+
 
         /*
          * Method for open set alarm modal
@@ -223,5 +226,24 @@ app
             });
         }
 
+        function getDayName(day){
+            switch (day) {
+                case 1:
+                    return 'Sun';
+                case 2:
+                    return 'Mon';
+                case 3:
+                    return 'Tue';
+                case 4:
+                    return 'Wed';
+                case 5:
+                    return 'Thu';
+                case 6:
+                    return 'Fri';
+                case 7:
+                    return 'Sat';
+            }
+        }
 
-    })
+
+    }]);
